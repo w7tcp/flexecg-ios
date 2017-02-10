@@ -3,7 +3,7 @@
 //  FlexECG
 //
 //  Created by Jules Agee on 2/7/17.
-//  Copyright © 2017 Jules Agee. All rights reserved.
+//  Copyright © 2017 Jules Agee & Peter Richie. All rights reserved.
 //
 
 #import "AppDelegate.h"
