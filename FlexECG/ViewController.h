@@ -16,20 +16,26 @@
 
 @interface ViewController : UIViewController <CPTScatterPlotDelegate>
 
-// Properties for your Object controls
+// Object controls
 @property (nonatomic, weak) IBOutlet UIView *ecgView;
-@property (nonatomic, weak) IBOutlet UITextView  *deviceInfo;
+@property (nonatomic, weak) IBOutlet UILabel *connStatus;
 
-// Property for DataSource object
+// DataSource object
 @property (nonatomic, strong) FilteredDataSource *dataSource;
 
-// Property for BLEController object
+// Bluetooth Controller object
 @property (nonatomic, strong) BLEController *bleController;
 
-// Property for Graph object
+// Core Plot Graph
 @property (nonatomic, strong) CPTXYGraph *graph;
 
+// Graph update timer
 @property (nonatomic, strong) NSTimer *timer;
+
+// buttons
+@property (weak, nonatomic) IBOutlet UIButton *stopStartButton;
+@property (weak, nonatomic) IBOutlet UIButton *clearDataButton;
+@property (weak, nonatomic) IBOutlet UIButton *emailButton;
 
 -(void)onTimerTick;
 

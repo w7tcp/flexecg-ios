@@ -15,16 +15,16 @@
 - (FilteredDataSource *) init
 {
     self.sampleArray = [[NSMutableArray alloc] init];
-
-    for(int i = 0; i <= 550; i++){
+    for(int i = 0; i <= 600; i++){
         [self.sampleArray addObject:[NSNumber numberWithInt:0]];
     }
     return self;
 }
 
+
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    return 550;
+    return 600;
 }
 
 - (NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
@@ -35,7 +35,7 @@
             return [NSNumber numberWithInteger:index];
             break;
         case CPTScatterPlotFieldY:
-            return [self.sampleArray objectAtIndex:[self.sampleArray count] - 550 + index];
+            return [self.sampleArray objectAtIndex:[self.sampleArray count] - 600 + index];
             break;
             
         default:

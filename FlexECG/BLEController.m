@@ -3,8 +3,24 @@
 //  FlexECG
 //
 //  Created by Jules Agee on 2/7/17.
-//  Copyright © 2017 Jules Agee & Peter Richie. All rights reserved.
 //
+//  Much of the code in this file was taken from the Bluetooth tutorial at https://www.raywenderlich.com and used with
+//  permission under the MIT license. Copyright © 2016 Razeware LLC. All rights reserved.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software to deal in the Software
+//  without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
+//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+//  subject to the following conditions:
+//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+//  Software.
+//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+//  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+//  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//  All other code Copyright © 2017 Jules Agee & Peter Richie. All rights reserved.
+//
+
 
 #import <Foundation/Foundation.h>
 #import "BLEController.h"
@@ -17,6 +33,7 @@
 {
     CBCentralManager *centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     self.centralManager = centralManager;
+    [self setValue:[NSNumber numberWithBool:NO] forKey:@"connected"];
     return self;
 }
 
@@ -25,14 +42,17 @@
 {
     [peripheral setDelegate:self];
     [peripheral discoverServices:nil];
-    self.connected = [NSString stringWithFormat:@"Connected: %@", peripheral.state == CBPeripheralStateConnected ? @"YES" : @"NO"];
-    NSLog(@"%@", self.connected);
+    self.status = [NSString stringWithFormat:@"Status: %@", peripheral.state == CBPeripheralStateConnected ? @"Connected" : @"Disconnected, searching..."];
+    [self setValue:[NSNumber numberWithBool:YES] forKey:@"connected"];
+    NSLog(@"%@", self.status);
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
     NSLog(@"Lost connection to FlexECG peripheral");
-    [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+
+    self.status = [NSString stringWithFormat:@"Status: %@", peripheral.state == CBPeripheralStateConnected ? @"Connected" : @"Disconnected"];
+    [self setValue:[NSNumber numberWithBool:NO] forKey:@"connected"];
 }
 
 // CBCentralManagerDelegate - This is called with the CBPeripheral class as its main input parameter. This contains most of the information there is to know about a BLE peripheral.
@@ -41,7 +61,6 @@
     NSString *localName = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
     if ([localName isEqual:@"FlexECG"]) {
         NSLog(@"Found the FlexECG peripheral: %@", localName);
-        [self.centralManager stopScan];
         self.flexECGPeripheral = peripheral;
         peripheral.delegate = self;
         [self.centralManager connectPeripheral:peripheral options:nil];
@@ -60,6 +79,7 @@
         NSLog(@"CoreBluetooth BLE hardware is powered on and ready");
         // Scan for all available CoreBluetooth LE devices
         [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        self.status = @"Status: Searching for device";
         
     }
     else if ([central state] == CBManagerStateUnauthorized) {
@@ -106,7 +126,7 @@
     }
     
     // Add your constructed device information to your UITextView
-    //self.deviceInfo.text = [NSString stringWithFormat:@"%@\n%@\n", self.connected, self.flexECGDeviceData];
+    //self.deviceInfo.text = [NSString stringWithFormat:@"%@\n%@\n", self.status, self.flexECGDeviceData];
     
 }
 
