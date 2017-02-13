@@ -145,7 +145,7 @@
         sample = CFSwapInt16LittleToHost(*(uint16_t *)netByteOrderSample); //swap byte order
         if( sample != 0xffff ) {      //ignore bit-filled samples
             NSLog(@"%hu", sample);
-            [self.dataSource.sampleArray addObject:[NSNumber numberWithUnsignedShort:sample]];
+            [self.dataSource appendData:[NSNumber numberWithUnsignedShort:sample]];
         }
         
     }

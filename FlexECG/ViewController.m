@@ -42,7 +42,7 @@
     double yAxisLength = maxY + 5;
     
     [self.ecgView setFrame:self.ecgView.bounds];
-    CPTGraphHostingView *hostingView = [[CPTGraphHostingView alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.ecgView.bounds),CGRectGetMinY(self.ecgView.bounds)+20,CGRectGetMaxX(self.ecgView.bounds),CGRectGetMaxY(self.ecgView.bounds)+10)];
+    CPTGraphHostingView *hostingView = [[CPTGraphHostingView alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.ecgView.bounds),CGRectGetMinY(self.ecgView.bounds)+(20+(CGRectGetMaxY(self.ecgView.bounds)-300)/17),CGRectGetMaxX(self.ecgView.bounds),CGRectGetMaxY(self.ecgView.bounds)-(CGRectGetMaxY(self.ecgView.bounds)-300)/20)];
     
     //CPTGraphHostingView *hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.ecgView.bounds];
     [self.view addSubview:hostingView];
@@ -155,8 +155,7 @@
     [mailComposeViewController setSubject:@"ECG Data Attached"];
     [mailComposeViewController setMessageBody:@"You can import the attached file as CSV in Excel" isHTML:NO];
     [mailComposeViewController addAttachmentData:emailAttachmentData mimeType:@"text/csv" fileName:filename];
-    [self presentModalViewController:mailComposeViewController animated:YES];
-
+    [self presentViewController:mailComposeViewController animated:YES completion:nil];
 }
 
 //User finished sending mail -- handle dismissing mail view

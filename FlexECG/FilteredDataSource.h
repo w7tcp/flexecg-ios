@@ -12,12 +12,20 @@
 
 @interface FilteredDataSource : NSObject <CPTPlotDataSource>
 
+// array of all sample data received
 @property (nonatomic, strong) NSMutableArray * _Nullable sampleArray;
+
+// array of data to visualize in the displayed graph
+@property (nonatomic, strong) NSMutableArray * _Nullable plotArray;
+
+// array for saving FIR filter state
+@property (nonatomic, strong) NSMutableArray * _Nullable FIRArray;
 
 - (NSUInteger) numberOfRecordsForPlot:		(nonnull CPTPlot *) 	plot;
 
 - (NSNumber * _Nonnull)numberForPlot:(CPTPlot * _Nonnull)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index;
 
+- (void) appendData:(NSNumber * _Nullable)sample;
 @end
 
 #endif /* FilteredDataSource_h */
