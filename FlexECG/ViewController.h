@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MFMailComposeViewController.h>
 #import "CorePlot-CocoaTouch.h"
 #import "FilteredDataSource.h"
 #import "BLEController.h"
@@ -14,7 +15,7 @@
 @import CoreBluetooth;
 @import QuartzCore;
 
-@interface ViewController : UIViewController <CPTScatterPlotDelegate>
+@interface ViewController : UIViewController <CPTScatterPlotDelegate, MFMailComposeViewControllerDelegate>
 
 // Object controls
 @property (nonatomic, weak) IBOutlet UIView *ecgView;

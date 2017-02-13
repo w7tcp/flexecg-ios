@@ -127,10 +127,42 @@
     }
 }
 
-//not implemented yet -- send all data via email
+// Send all data via email
 - (IBAction)sendEmail:(id)sender
 {
+    if (![MFMailComposeViewController canSendMail]) {
+        NSLog(@"Mail services are not available");
+        return;
+    }
     
+    // convert all samples to a string of integers separated by newlines - should be easy to import as CSV
+    NSMutableString *emailAttString = [[NSMutableString alloc] init];
+    for (id sample in self.dataSource.sampleArray) {
+        [emailAttString appendString:[sample stringValue]];
+        [emailAttString appendString:@"\n"];                   // Add newline
+    }
+    
+    NSData *emailAttachmentData = [emailAttString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    //Get date/time string so attachments don't all have the same name
+    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"MMddyyyy-hh-mm-ss"];
+    NSMutableString *filename = [[NSMutableString alloc] initWithString:[formatter stringFromDate:[NSDate date]]];
+    [filename appendString:@"-ECGData.csv"];
+    
+    MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
+    mailComposeViewController.mailComposeDelegate = self;
+    [mailComposeViewController setSubject:@"ECG Data Attached"];
+    [mailComposeViewController setMessageBody:@"You can import the attached file as CSV in Excel" isHTML:NO];
+    [mailComposeViewController addAttachmentData:emailAttachmentData mimeType:@"text/csv" fileName:filename];
+    [self presentModalViewController:mailComposeViewController animated:YES];
+
+}
+
+//User finished sending mail -- handle dismissing mail view
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
